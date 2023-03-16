@@ -1,9 +1,9 @@
 from sympy import symbols, solve
-from bigfloat import *
-from fractions import Fraction
+from decimal import *
 
 
 def decomposition(denominator: int, a: int) -> tuple[int, int, int]:
+    # a = Reste division
     while True:
         denominator_minus = denominator - a
 
@@ -27,21 +27,38 @@ def decomposition(denominator: int, a: int) -> tuple[int, int, int]:
             return a, x, y
 
 
-def get_b(a: int, x: int, y: int) -> int:
-    b = symbols('b')
-    eq = 3 * (b + x) - 1 - a - x * y
-    sol = solve(eq, b)
-    result_b = float(sol[0])
-    return result_b
+# def get_b(a: int, x: int, y: int) -> int:
+#     while True:
+#         b = symbols('b')
+#         eq = -4 / (a + x * y) + 1 / (b + x) + 1 / (a + x * y) + 1 / ((a + x * y) * (b + x))
+#         sol = solve(eq, b)
+#         result_b = int(sol[0])
+#
+#         if type(result_b) != int:
+#             a += 1
+#         else:
+#             return result_b
+
+def get_b(a: int, x: int, y: int) -> float:
+    while True:
+        # b = (3 * x - 1 - a - x * y) / -2
+        b = (-3 * x + a + x * y + 1) / 3
+
+        int_b = int(str(b)[-1:])
+        if int_b != 0:
+            a += 1
+        else:
+            return b
 
 
-def get_frac(a: int, x: int, y: int) -> dict:
-    results = {
-        'addition': f"1/{b + x} + 1/{a + x * y} + 1/{(a + x * y) * (b + x)}",
-        # 'simplified': str(Fraction(1, b + x) + Fraction(1, a + x * y) + Fraction(1, (a + x * y) * (b + x))),
-    }
+def get_b_test(a: int, x: int, y: int) -> float:
+    pass
 
-    return results
+
+def get_frac(a: int, x: int, y: int) -> float:
+    # utilise .maths to get perfect no issuee  llzd
+    print(f"1/{b + x} + 1/{a + x * y} + 1/{(a + x * y) * (b + x)}")
+    return 1 / b + x + 1 / a + x * y + 1 / (a + x * y) * (b + x)
 
 
 if __name__ == '__main__':
@@ -53,4 +70,4 @@ if __name__ == '__main__':
     b = get_b(a, x, y)
     result_frac = get_frac(a, x, y)
 
-    print(f"a: {a}\nx: {x}\ny: {y}\nb: {b}\nfraction: {result_frac.__str__()}")
+    print(f"a: {a}\nx: {x}\ny: {y}\nb: {b}\nfraction: {result_frac}")
